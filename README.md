@@ -9,7 +9,7 @@
 
 | Full System | Admin Mode on LCD |
 |---|---|
-| ![System](../images/fingerprint-system.jpg) | ![Admin Mode](../images/fingerprint-system-2.jpg) |
+| ![System](fingerprint-system.jpg) | ![Admin Mode](fingerprint-system-2.jpg) |
 
 ---
 
