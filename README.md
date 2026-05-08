@@ -15,7 +15,8 @@
 
 ## Demo Video
 
-> 🎬 **Coming soon** — demonstration video showing touch-sensor authentication, user switching, admin menu navigation, access log review, and EEPROM reset via long-press.
+[![Watch the demo](thumbnail.jpg)](https://youtu.be/_8RWT5RVgtE)
+*Click the thumbnail to watch the demonstration Video*
 
 ---
 
