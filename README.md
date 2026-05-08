@@ -15,7 +15,7 @@
 
 ## Demonstration Video
 
-[![Watch the demo](thumbnail.jpg)](https://youtu.be/H0uvinRyD2k)
+[![Watch the demo](thumbnail.jpg)](https://youtu.be/_8RWT5RVgtE)
 *Click the thumbnail to watch the demonstration Video*
 
 ---
