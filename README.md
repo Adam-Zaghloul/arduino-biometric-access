@@ -16,7 +16,7 @@
 ## Demonstration Video
 
 [![Watch the demo](thumbnail.jpg)](https://youtu.be/_8RWT5RVgtE)
-*Click the thumbnail to watch the demonstration Video*
+*Click the thumbnail to watch the demonstration video.*
 
 ---
 
@@ -26,11 +26,23 @@ I designed and built an **Arduino-based access control system** that authenticat
 
 I wrote the full Arduino sketch from scratch — all button handling uses software debouncing, the admin menu is driven by a 4-button UI, and the log is stored in a structured 7-byte EEPROM format with circular overwrite protection.
 
-**Key specs:**
-- Up to **105 access log entries** (7 bytes/entry × 105 = 735 bytes)
-- **2-user support** with per-user log retrieval
-- Timestamp resolution: **HH:MM** (hour and minute)
-- Audio + visual feedback on every access event
+---
+
+## What I Built
+
+- **Designed** the full system architecture: touch sensor → RTC → EEPROM logging → LCD display → buzzer/LED feedback
+- **Wired** the Arduino Uno, KY-036 touch sensor, DS1307 RTC, I2C LCD, 4 push-buttons, active buzzer, and red LED on breadboard
+- **Chose** I2C for the LCD and RTC to minimize Arduino pin usage — both share the same SDA/SCL bus (A4/A5)
+- **Wrote** the complete Arduino sketch from scratch — no pre-built examples used
+- **Implemented** a 7-byte EEPROM data structure to store user ID, year, month, day, hour, and minute per entry
+- **Implemented** software debouncing (50 ms guard) for all 4 push-buttons
+- **Implemented** long-press detection (3 s) for the SELECT button using `millis()` comparison
+- **Built** a menu-driven admin mode with user selection, log viewing, and full EEPROM reset
+- **Added** an RTC validity check on startup — auto-corrects to compile time if year < 2020
+- **Implemented** circular overwrite protection — log index resets to 0 at 105 entries
+- **Tested** the full system: touch detection, EEPROM write/read, RTC timestamp accuracy, LCD display, buzzer and LED feedback
+- **Troubleshot** upload failures, RTC module faults, and library conflicts — resolved each issue
+- **Documented** the full project including wiring, pseudocode, EEPROM structure, and code architecture
 
 ---
 
@@ -66,8 +78,8 @@ Arduino Uno R3
 └── GND ────────── GND rails
 ```
 
-> I2C was chosen for the LCD and RTC to minimise pin usage — both devices share the same SDA/SCL bus (A4/A5).  
-> All buttons use Arduino internal pull-up resistors (`INPUT_PULLUP`); no external pull-up resistors required.
+> I2C was chosen for the LCD and RTC to minimise pin usage — both devices share the same SDA/SCL bus.
+> All buttons use Arduino internal pull-up resistors (`INPUT_PULLUP`) — no external pull-up resistors required.
 
 ---
 
@@ -79,7 +91,7 @@ Designed in **Tinkercad Circuits**.
 |---|---|
 | ![Schematic](Schema.png) | ![Tinkercad](TinkerCAD.png) |
 
-The schematic shows the Arduino Uno, 16×2 LCD with I2C backpack (contrast potentiometer + 220 Ω LED resistor), DS1307 RTC on the shared I2C bus, KY-036 touch sensor on D2, red LED on D11, active buzzer on D12, and 4 tactile push-buttons (D7–D10) wired active-low.
+The schematic shows the Arduino Uno, 16×2 LCD with I2C backpack, DS1307 RTC on the shared I2C bus, KY-036 touch sensor on D2, red LED on D11, active buzzer on D12, and 4 tactile push-buttons (D7–D10) wired active-low.
 
 ---
 
@@ -91,10 +103,10 @@ The schematic shows the Arduino Uno, 16×2 LCD with I2C backpack (contrast poten
 - **UP / DOWN buttons:** toggle between User 1 and User 2
 
 ### Admin Mode (MENU button)
-- LCD displays selected user and a prompt: `Admin: User X` / `Select for stats`
+- LCD displays: `Admin: User X` / `Select for stats`
 - **UP button:** select User 1
 - **DOWN button:** select User 2
-- **SELECT (short press):** display total access count + most recent timestamp for the selected user
+- **SELECT (short press):** display access count + most recent timestamp for selected user
 - **SELECT (long press, 3 s):** full EEPROM reset — clears all logs and resets the log counter
 
 ---
@@ -123,7 +135,7 @@ Each access event is stored as **7 consecutive bytes**:
 | +5 | 1 byte | Hour |
 | +6 | 1 byte | Minute |
 
-- Max entries: **105** (7 × 105 = 735 bytes; well within the Uno's 1 KB EEPROM)
+- Max entries: **105** (7 × 105 = 735 bytes — within the Uno's 1 KB EEPROM)
 - Log counter stored at **EEPROM address 250**
 - Circular overwrite: index resets to 0 when full
 
@@ -145,8 +157,8 @@ Also available on Pastebin: [https://pastebin.com/aRLB4ggq](https://pastebin.com
 | `EEPROM.h` | Built-in Arduino EEPROM access |
 
 **Code architecture highlights:**
-- All button inputs handled with a **50 ms software debounce** (`lastButtonTime` guard)
-- Long-press detection implemented with a blocking `while` loop and `millis()` comparison
+- All buttons handled with a **50 ms software debounce** (`lastButtonTime` guard)
+- Long-press detection implemented with `millis()` comparison
 - `logAccess()` and `showUserStats()` are modular functions — separated from the main loop
 - RTC validity check on startup: auto-corrects to compile time if year < 2020
 - Battery backup test runs once per power cycle via `testBatteryBackup()`
